@@ -1,0 +1,18 @@
+.filter-form{
+    background-color: #bebebe37;
+    border-radius: var(--br1);
+    padding: var(--p1);
+    >input[type="text"]{
+        border: none;
+        padding: 0.3rem;
+        border-radius: var(--br1);
+        background-color: var(--clr2bg);
+    }
+    >label{
+    margin-top: 1rem;
+    font-weight: 600;
+    }
+    >h2{
+        text-decoration: underline;
+    }
+}
