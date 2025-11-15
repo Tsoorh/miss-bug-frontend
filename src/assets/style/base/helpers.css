@@ -1,26 +1,26 @@
 /* flex helpers */
 
 .flex {
-  display: flex;
+    display: flex;
 }
 
-.flex.flex-column{
+.flex.flex-column {
     flex-direction: column;
 }
 
-.flex.justify-center{
+.flex.justify-center {
     justify-content: center;
 }
 
-.flex.justify-between{
+.flex.justify-between {
     justify-content: space-between;
 }
 
-.flex.align-center{
+.flex.align-center {
     align-items: center;
 }
 
-.flex.align-start{
+.flex.align-start {
     align-items: start;
 }
 
@@ -28,6 +28,18 @@
 
 .colored-text {
     color: var(--clr1);
+}
+
+/* input */
+.input {
+    border: 2px solid rgb(196, 196, 196);
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+}
+
+/* shadow */
+.shadow {
+    box-shadow: 1px 1px 4px 4px rgb(199, 199, 199);
 }
 
 /* list helpers */

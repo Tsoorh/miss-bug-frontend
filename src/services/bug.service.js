@@ -37,21 +37,25 @@ async function getById(bugId) {
   return await axios.get(BASE_URL + bugId).then((res) => res.data);
 }
 function remove(bugId) {
-  return axios.get(BASE_URL + bugId + "/remove");
+  return axios.delete(BASE_URL + bugId );
 }
 async function save(bug) {
-  return await axios.get(BASE_URL + "save", { params: bug }).then((res) => res.data);
+  if (bug._id) return await axios.put(BASE_URL + "save", { params: bug }).then((res) => res.data);
+  else return await axios.post(BASE_URL + "save", { params: bug }).then((res) => res.data);
 }
 async function getBugsPDF() {
   const response =  await axios.get(BASE_URL + "pdf" ,{responseType:'blob'});
-
   //create url download
   const url = window.URL.createObjectURL(new Blob([response.data]));
+  
+  //יצירת אלמנט קישור a והורדה אוטומטית
   const link = document.createElement('a');
   link.href = url;
-  link.setAttribute('download', 'bugs.pdf');
-  document.body.appendChild(link);
+  link.setAttribute('download', 'bugs.pdf');// במקום ניווט הורדת קובץ בשם bugs.pdf
+  document.body.appendChild(link);// הוסף את a כילד האחרון של body
   link.click();
+  
+  //ניקוי הזיכרון 
   link.remove();
   window.URL.revokeObjectURL(url);
   
