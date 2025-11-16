@@ -7,11 +7,21 @@
 .header-container {
     display: flex;
     align-items: center;
-
+    justify-content: space-between;
 }
 
-.header-container h1 {
+/* .header-container h1 {
     flex-grow: 1;
+} */
+
+.header-auth{
+    display: flex;
+    align-items: center;
+    >a{
+        margin-left: 0.2em;
+        color: black;
+        text-decoration: underline;
+    }
 }
 
 .app-nav {

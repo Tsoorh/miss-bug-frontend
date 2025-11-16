@@ -19,8 +19,8 @@ async function login(username,password) {
 }
 async function signup(credentials) {
     try {
-        const res = await axios.post(BASE_URL+ "login",credentials)
-        sessionStorage.setItem('loggedinUser',res.data);
+        const res = await axios.post(BASE_URL+ "signup", {credentials})
+        sessionStorage.setItem('loggedinUser',JSON.stringify(res.data));
         console.log("🚀 ~ signup ~ res.data:", res.data)
         return res.data
     } catch (err) {
@@ -42,7 +42,7 @@ async function logout() {
 }
 
 function getLoggedinUser() {
-    return sessionStorage.getItem('loggedinUser');
+    return JSON.parse(sessionStorage.getItem('loggedinUser')) || null
 }
 
 export const authService = {

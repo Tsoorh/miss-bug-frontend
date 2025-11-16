@@ -1,14 +1,25 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { authService } from "../services/auth/auth.service.js";
+import { useNavigate, useLocation } from "react-router";
 
-
-export function LoginSignup({ signup = true }) {
-  const [isSignup, setIsSignup] = useState(signup);
+export function LoginSignup() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  
+  const [requireSignup, setRequireSignup] = useState(getUrlLocation());
   const [credantials, setCredendials] = useState({
     fullname: "",
     username: "",
     password: "",
   });
+
+  useEffect(() => {
+    setRequireSignup(getUrlLocation());
+  }, [location.pathname]);
+
+  function getUrlLocation() {
+    return location.pathname === "/signup";
+  }
 
   function onChange(ev) {
     const { name, value } = ev.target;
@@ -19,30 +30,33 @@ export function LoginSignup({ signup = true }) {
     }));
   }
 
-  async function onHandleSubmit() {
+  async function onHandleSubmit(ev) {
+    ev.preventDefault();
     try {
-      if (isSignup) {
-        const user = await authService.login(credantials.username,credantials.password)
-        console.log("🚀 ~ onHandleSubmit ~ user:", user)
+      if (requireSignup) {
+        await authService.signup(credantials);
+        navigate("/");
       } else {
-        const user = await authService.signup(credantials)
-        console.log("🚀 ~ onHandleSubmit ~ user:", user)
+        await authService.login(credantials.username, credantials.password);
+        navigate("/");
       }
     } catch (err) {
-        console.log("🚀 ~ onHandleSubmit ~ err:", err)
+      console.log("🚀 ~ onHandleSubmit ~ err:", err);
     }
   }
 
   function onChangeForm(ev) {
     ev.preventDefault();
-    setIsSignup((prev) => !prev);
+    setRequireSignup((prev) => !prev);
   }
 
   return (
     <>
-      <h1 className="flex justify-center">{isSignup ? "Signup" : "Login"}</h1>
+      <h1 className="flex justify-center">
+        {requireSignup ? "Signup" : "Login"}
+      </h1>
       <form className="shadow login-signup">
-        {isSignup && (
+        {requireSignup && (
           <div>
             <label htmlFor="fullname">Fullname: </label>
             <input
@@ -78,14 +92,14 @@ export function LoginSignup({ signup = true }) {
           />
         </div>
         <div className="flex justify-center">
-          <button onClick={onHandleSubmit}>
-            {isSignup ? "Signup" : "Login"}
+          <button type="button" onClick={onHandleSubmit}>
+            {requireSignup ? "Signup" : "Login"}
           </button>
         </div>
         <p>
-          {isSignup ? "Dont" : "Already"} have a user?
+          {requireSignup ? "Dont" : "Already"} have a user?
           <a className="a-link" onClick={onChangeForm}>
-            {isSignup ? "Login" : "Signup"}
+            {requireSignup ? "Login" : "Signup"}
           </a>
         </p>
       </form>

@@ -26,10 +26,11 @@ function query(filterBy = {}) {
       if (!filterBy.createdAt) filterBy.createdAt = -Infinity;
       const regExp = new RegExp(filterBy.txt, "i");
       return bugs.filter(
-        (car) =>
-          regExp.test(car.title) &&
-          car.severity <= filterBy.severity &&
-          car.createdAt >= filterBy.createdAt
+        (bug) =>
+          regExp.test(bug.title) &&
+          bug.severity <= filterBy.severity &&
+          bug.createdAt >= filterBy.createdAt&&
+          bug.creator._id === filterBy.userId
       );
     });
 }
@@ -61,6 +62,7 @@ async function getBugsPDF() {
   
   return response.data;
 }
+
 
 
 
