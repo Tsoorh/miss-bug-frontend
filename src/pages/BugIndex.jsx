@@ -4,6 +4,7 @@ import { BugList } from '../cmps/BugList.jsx'
 import { BugFilter } from '../cmps/BugFilter.jsx'
 import { useState,useEffect } from 'react'
 import { bugLocalService } from '../services/bug.service.Local.js'
+import { authService } from '../services/auth/auth.service.js'
 
 
 export function BugIndex() {
@@ -33,11 +34,18 @@ export function BugIndex() {
     }
 
     async function onAddBug() {
+        const currentUser = authService.getLoggedinUser()
+        if (!currentUser) return showErrorMsg('Please login'); 
+        
         const bug = {
             title: prompt('Bug title?'),
             severity: +prompt('Bug severity?'),
             description: prompt('Bug description?'),
-            createdAt:+new Date()
+            createdAt:+new Date(),
+            creator:{
+                _id: currentUser._id,
+                fullname: currentUser.fullname
+            }
         }
         try {
             const savedBug = await bugService.save(bug)

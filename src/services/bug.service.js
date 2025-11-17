@@ -12,7 +12,8 @@ export const bugService = {
   getById,
   save,
   remove,
-  getBugsPDF
+  getBugsPDF,
+  getByUserId
 };
 
 function query(filterBy = {}) {
@@ -29,8 +30,7 @@ function query(filterBy = {}) {
         (bug) =>
           regExp.test(bug.title) &&
           bug.severity <= filterBy.severity &&
-          bug.createdAt >= filterBy.createdAt&&
-          bug.creator._id === filterBy.userId
+          bug.createdAt >= filterBy.createdAt
       );
     });
 }
@@ -38,31 +38,37 @@ async function getById(bugId) {
   return await axios.get(BASE_URL + bugId).then((res) => res.data);
 }
 function remove(bugId) {
-  return axios.delete(BASE_URL + bugId );
+  return axios.delete(BASE_URL + bugId);
 }
 async function save(bug) {
-  if (bug._id) return await axios.put(BASE_URL + "save", { params: bug }).then((res) => res.data);
-  else return await axios.post(BASE_URL + "save", { params: bug }).then((res) => res.data);
+  if (bug._id) return await axios.put(BASE_URL + bug._id, bug ).then((res) => res.data);
+  else return await axios.post(BASE_URL, bug ).then((res) => res.data);
 }
 async function getBugsPDF() {
-  const response =  await axios.get(BASE_URL + "pdf" ,{responseType:'blob'});
+  const response = await axios.get(BASE_URL + "pdf", { responseType: 'blob' });
   //create url download
   const url = window.URL.createObjectURL(new Blob([response.data]));
-  
+
   //יצירת אלמנט קישור a והורדה אוטומטית
   const link = document.createElement('a');
   link.href = url;
   link.setAttribute('download', 'bugs.pdf');// במקום ניווט הורדת קובץ בשם bugs.pdf
   document.body.appendChild(link);// הוסף את a כילד האחרון של body
   link.click();
-  
+
   //ניקוי הזיכרון 
   link.remove();
   window.URL.revokeObjectURL(url);
-  
+
   return response.data;
 }
 
+async function getByUserId(userId) {
+  const res = await axios.get(BASE_URL)
+  const bugs = res.data
+  const userBugs = await bugs.filter(bug => (bug.creator._id === userId))
+  return userBugs
+}
 
 
 

@@ -35,7 +35,7 @@ export function AppHeader() {
         )}
         <nav className="app-nav">
           <NavLink to="/">Home</NavLink> |<NavLink to="/bug">Bugs</NavLink> |
-          <NavLink to="/user">Users</NavLink> |
+          {loggedinUser?.isAdmin&&(<><NavLink to="/user">Users</NavLink> |</>)}
           <NavLink to="/about">About</NavLink>
         </nav>
       </div>
